@@ -12,12 +12,15 @@ dns_packets = rdpcap(sys.argv[1])
 for packet in dns_packets:
     #print(packet)
     if packet.haslayer(DNS):
-        pkt_time = packet.sprintf('%sent.time%')
+        pkt_time = str(packet.time)
         dst = packet[IP].dst
         src = packet[IP].src
+        src_port = str(packet[UDP].sport)
+        dst_port = str(packet[UDP].dport)
+
         dns = packet.getlayer(DNS)
         
-        values = [pkt_time, src, dst]
+        values = [pkt_time, src, src_port, dst, dst_port]
         dns_fields = [dns.id, dns.qr, dns.opcode, dns.aa, dns.tc, dns.rd, dns.ra, dns.z, dns.rcode]
         values.extend([str(x) for x in dns_fields])
 
